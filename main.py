@@ -4,7 +4,7 @@ import pygame, sys
 
 
 def ball_animation():
-    global ball_speed_x, ball_speed_y,opponent_score,player_score
+    global ball_speed_x, ball_speed_y, opponent_score, player_score
     # Moving ball
     ball.x += ball_speed_x
     ball.y += ball_speed_y
@@ -12,10 +12,10 @@ def ball_animation():
     if ball.top <= 0 or ball.bottom >= screen_height:
         ball_speed_y *= -1
     if ball.left <= 0:
-        player_score+=1
+        player_score += 1
         ball_start()
     if ball.right >= screen_width:
-        opponent_score+=1
+        opponent_score += 1
         ball_start()
     # Collision with ball
     if ball.colliderect(player) or ball.colliderect(opponent):
@@ -37,7 +37,7 @@ def opponent_ai():
 
 
 def ball_start():
-    global  ball_speed_x,ball_speed_y
+    global ball_speed_x, ball_speed_y
     ball.center = (screen_width / 2), (screen_height / 2)
     ball_speed_y *= random.choice((1, -1))
     ball_speed_x *= random.choice((1, -1))
@@ -60,24 +60,25 @@ LIGHT_GREY = (200, 200, 200)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-#Text variables
-player_score=0
-opponent_score=0
-game_font=pygame.font.Font("freesansbold.ttf",32)
+# Text variables
+player_score = 0
+opponent_score = 0
+game_font = pygame.font.Font("freesansbold.ttf", 32)
 
 # Creating rectangles
 ball = pygame.Rect(screen_width / 2, screen_height / 2, 30, 30)
 player = pygame.Rect(screen_width / 2, screen_height / 2, 20, 140)
 opponent = pygame.Rect(screen_width / 2, screen_height / 2, 20, 140)
-# my coordinates
+
+# My coordinates
 ball.center = (screen_width / 2), (screen_height / 2)
 player.center = (screen_width), (screen_height / 2)
 opponent.center = 0, (screen_height / 2)
 
 # speed of ball horizontal and vertical
-speed_value = 7
+speed_value = 8
 
-ball_speed_x = speed_value*random.choice((1, -1))
+ball_speed_x = speed_value * random.choice((1, -1))
 ball_speed_y = speed_value
 
 player_speed = 0
@@ -94,22 +95,21 @@ while True:
             if event.key == pygame.K_DOWN:
                 player_speed += speed_value
             if event.key == pygame.K_UP:
-                player_speed -=speed_value
+                player_speed -= speed_value
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN:
-                player_speed += speed_value
             if event.key == pygame.K_UP:
+                player_speed += speed_value
+            if event.key == pygame.K_DOWN:
                 player_speed -= speed_value
 
     # ball animation function
     ball_animation()
     player.y += player_speed
-
+    #player and opponent animation
     player_animation(player)
     player_animation(opponent)
-
+    #opponent ai
     opponent_ai()
-
 
     # Visuals
     screen.fill(GREY12)
@@ -117,11 +117,15 @@ while True:
     pygame.draw.rect(screen, GREEN, player)
     pygame.draw.rect(screen, GREEN, opponent)
     pygame.draw.ellipse(screen, RED, ball)
+
     # Text
-    player_text=game_font.render(f"{player_score}",False,LIGHT_GREY)
-    screen.blit(player_text,((screen_width//2)+10,(screen_height/2)))
+    player_text = game_font.render(f"{player_score}", False, LIGHT_GREY)
+    screen.blit(player_text, ((screen_width // 2) + 20, (screen_height - 50)))
     opponent_text = game_font.render(f"{opponent_score}", False, LIGHT_GREY)
-    screen.blit(opponent_text, ((screen_width// 2) - 20, (screen_height / 2)))
+    score_text = game_font.render(f"Score:", False, LIGHT_GREY)
+    screen.blit(opponent_text, ((screen_width // 2) - (50), (screen_height - 50)))
+    screen.blit(score_text, (50, (screen_height - 50)))
+
     # Updating window
     pygame.display.flip()
     clock.tick(60)
